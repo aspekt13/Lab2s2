@@ -53,25 +53,7 @@ namespace Lab2s2
 
             int[,] matrix = new int[rows, cols];
 
-            for (int i = 0; i < rows; i++)
-            {
-                Console.WriteLine($"Введіть {cols} чисел для рядка {i} через пробіл: ");
-                string[] input = Console.ReadLine().Split(' ');
-                for (int j = 0; j < cols; j++)
-                {
-                    matrix[i, j] = int.Parse(input[j]);
-                }
-            }
-
-            Console.WriteLine("Ваша матриця:");
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    Console.Write(matrix[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
+            EnterArray(matrix, rows, cols);
 
             MinEl(matrix, rows, cols);
 
@@ -108,10 +90,36 @@ namespace Lab2s2
             int cols = int.Parse(Console.ReadLine());
 
             int[,] matrix = new int[rows, cols];
+
             EnterArray(matrix, rows, cols);
+
+            SwapMaxWithFirst(matrix, rows, cols);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню");
             Console.ReadKey();
+        }
+
+        static void SwapMaxWithFirst(int[,] matrix, int rows, int cols)
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                int max = matrix[i, 0];
+                int maxIndex = 0;
+                for (int j = 1; j < cols; j++)
+                {
+                    if (matrix[i, j] > max)
+                    {
+                        max = matrix[i, j];
+                        maxIndex = j;
+                    }
+                }
+                // Обмін місцями
+                int temp = matrix[i, 0];
+                matrix[i, 0] = matrix[i, maxIndex];
+                matrix[i, maxIndex] = temp;
+            }
+            Console.WriteLine("Матриця після обміну:");
+            PrintMatrix(matrix, rows, cols);
         }
 
         static void EnterArray(int[,] matrix, int rows, int cols)
@@ -125,7 +133,10 @@ namespace Lab2s2
                     matrix[i, j] = int.Parse(input[j]);
                 }
             }
-
+            PrintMatrix(matrix, rows, cols);
+        }
+        static void PrintMatrix(int[,] matrix, int rows, int cols)
+        {
             Console.WriteLine("Ваша матриця:");
             for (int i = 0; i < rows; i++)
             {
