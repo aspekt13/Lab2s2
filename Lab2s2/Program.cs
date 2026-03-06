@@ -28,10 +28,10 @@ namespace Lab2s2
                         Block2();
                         break;
                     case "3":
-
+                        Block3();
                         break;
                     case "4":
-
+                        Block4();
                         break;
                     case "0":
                         return;
@@ -46,10 +46,8 @@ namespace Lab2s2
         {
             Console.Clear();
             Console.WriteLine("Блок 1 (варіант 1)\nЗнайти мінімальний елемент у кожному рядку. Вивести його значення та індекси.");
-            Console.WriteLine("Введіть кількість рядків");
-            int rows = int.Parse(Console.ReadLine());
-            Console.WriteLine("Введіть кількість стовпців");
-            int cols = int.Parse(Console.ReadLine());
+            int rows = GetValidInt("Введіть кількість рядків:");
+            int cols = GetValidInt("Введіть кількість стовпців:");
 
             int[,] matrix = new int[rows, cols];
 
@@ -84,10 +82,8 @@ namespace Lab2s2
             Console.Clear();
             Console.WriteLine("Блок 2 варіант 6\nОбміняти місцями перший з максимальних і перший (технічно 0-ий) елементи в кожному рядку матриці.");
 
-            Console.WriteLine("Введіть кількість рядків");
-            int rows = int.Parse(Console.ReadLine());
-            Console.WriteLine("Введіть кількість стовпців");
-            int cols = int.Parse(Console.ReadLine());
+            int rows = GetValidInt("Введіть кількість рядків:");
+            int cols = GetValidInt("Введіть кількість стовпців:");
 
             int[,] matrix = new int[rows, cols];
 
@@ -122,22 +118,153 @@ namespace Lab2s2
             PrintMatrix(matrix, rows, cols);
         }
 
+        static void Block3()
+        {
+            Console.Clear();
+            Console.WriteLine("Блок 3 варіант 3\nУпорядкувати за незростанням елементів рядок з максимальним добутком елементів\n(якщо рядків з однаковим максимальним добутком кілька, то\r\nвпорядкувати кожен з них).");
+            int rows = GetValidInt("Введіть кількість рядків:");
+            int cols = GetValidInt("Введіть кількість стовпців:");
+            int[,] matrix = new int[rows, cols];
+
+            EnterArray(matrix, rows, cols);
+            SortRowWithMaxProduct(matrix, rows, cols);
+
+            Console.WriteLine("Натисніть любу кнопку для виходу в меню");
+            Console.ReadKey();
+        }
+        static void SortRowWithMaxProduct(int[,] matrix, int rows, int cols)
+        {
+            long[] rowProducts = new long[rows]; // Масив для зберігання добутків рядків
+            long maxProduct = long.MinValue;
+
+            for (int i = 0; i < rows; i++) // Обчислюємо добуток для кожного рядка
+            {
+                long product = 1;
+                for (int j = 0; j < cols; j++)
+                {
+                    product *= matrix[i, j];
+                }
+
+                rowProducts[i] = product;
+
+                if (product > maxProduct)
+                {
+                    maxProduct = product;
+                }
+            }
+            for (int i = 0; i < rows; i++) // Сортуємо рядки з максимальним добутком
+            {
+                if (rowProducts[i] == maxProduct)
+                {
+                    int[] tempRow = new int[cols];
+                    for (int j = 0; j < cols; j++)
+                    {
+                        tempRow[j] = matrix[i, j];
+                    }
+                    Array.Sort(tempRow);
+                    Array.Reverse(tempRow);
+                    for (int j = 0; j < cols; j++)
+                    {
+                        matrix[i, j] = tempRow[j];
+                    }
+                }
+            }
+
+            Console.WriteLine($"\nМатриця після сортування (Максимальний добуток: {maxProduct})");
+            PrintMatrix(matrix, rows, cols);
+        }
+
+        static void Block4()
+        {
+            Console.Clear();
+            Console.WriteLine("Блок 4 варіант 4\nУпорядкувати стовпчики матриці за незростанням максимального елемента.");
+
+            int rows = GetValidInt("Введіть кількість рядків:");
+            int cols = GetValidInt("Введіть кількість стовпців:");
+            int[,] matrix = new int[rows, cols];
+
+            EnterArray(matrix, rows, cols);
+            SortColsByMaxElement(matrix, rows, cols);
+
+            Console.WriteLine("Натисніть любу кнопку для виходу в меню");
+            Console.ReadKey();
+        }
+        static void SortColsByMaxElement(int[,] matrix, int rows, int cols)
+        {
+            int[] maxElements = new int[cols];
+
+            // Знаходимо максимальний елемент для кожного стовпця
+            for (int j = 0; j < cols; j++)
+            {
+                int max = matrix[0, j];
+                for (int i = 1; i < rows; i++)
+                {
+                    if (matrix[i, j] > max)
+                    {
+                        max = matrix[i, j];
+                    }
+                }
+                maxElements[j] = max;
+            }
+
+            for (int i = 0; i < cols - 1; i++)
+            {
+                for (int j = 0; j < cols - i - 1; j++)
+                {
+                    if (maxElements[j] < maxElements[j + 1])
+                    {
+                        int tempMax = maxElements[j];
+                        maxElements[j] = maxElements[j + 1];
+                        maxElements[j + 1] = tempMax;
+
+                        SwapColumns(matrix, rows, j, j + 1);
+                    }
+                }
+            }
+            Console.WriteLine("\nМатриця після сортування стовпців:");
+            PrintMatrix(matrix, rows, cols);
+        }
+        static void SwapColumns(int[,] matrix, int rows, int col1, int col2)
+        {
+            for (int k = 0; k < rows; k++)
+            {
+                int tempValue = matrix[k, col1];
+                matrix[k, col1] = matrix[k, col2];
+                matrix[k, col2] = tempValue;
+            }
+        }
+
         static void EnterArray(int[,] matrix, int rows, int cols)
         {
             for (int i = 0; i < rows; i++)
             {
-                Console.WriteLine($"Введіть {cols} чисел для рядка {i} через пробіл: ");
-                string[] input = Console.ReadLine().Split(' ');
-                for (int j = 0; j < cols; j++)
+                bool ok = false;
+                while (!ok)
                 {
-                    matrix[i, j] = int.Parse(input[j]);
+                    Console.WriteLine($"Введіть {cols} чисел для рядка {i} через пробіл: ");
+                    string[] input = Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (input.Length != cols) 
+                    {
+                        Console.WriteLine("Помилка. Невірна кількість чисел."); 
+                        continue;
+                    }
+                    ok = true;
+                    for (int j = 0; j < cols; j++)
+                    {
+                        if (!int.TryParse(input[j], out matrix[i, j]))
+                        {
+                            Console.WriteLine($"Помилка. Ви ввели не число");
+                            ok = false; break;
+                        }
+                    }
                 }
             }
+            Console.WriteLine("Ваша матриця:");
             PrintMatrix(matrix, rows, cols);
         }
         static void PrintMatrix(int[,] matrix, int rows, int cols)
         {
-            Console.WriteLine("Ваша матриця:");
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -146,6 +273,17 @@ namespace Lab2s2
                 }
                 Console.WriteLine();
             }
+        }
+        static int GetValidInt(string message)
+        {
+            int number;
+            Console.WriteLine(message);
+            while (!int.TryParse(Console.ReadLine(), out number))
+            {
+                Console.WriteLine("Помилка. Введіть коректне ціле число цифрами.");
+                Console.WriteLine(message);
+            }
+            return number;
         }
     }
 }
