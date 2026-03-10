@@ -53,13 +53,13 @@ namespace Lab2s2
 
             EnterArray(matrix, rows, cols);
 
-            MinEl(matrix, rows, cols);
+            MinElement(matrix, rows, cols);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню вибору");
             Console.ReadKey();
         }
 
-        static void MinEl(int[,] matrix, int rows, int cols)
+        static void MinElement(int[,] matrix, int rows, int cols)
         {
             for (int i = 0; i < rows; i++)
             {
