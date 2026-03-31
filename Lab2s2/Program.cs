@@ -53,19 +53,19 @@ namespace Lab2s2
 
             EnterArray(matrix, rows, cols);
 
-            MinElement(matrix, rows, cols);
+            MinElement(matrix);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню вибору");
             Console.ReadKey();
         }
 
-        static void MinElement(int[,] matrix, int rows, int cols)
+        static void MinElement(int[,] matrix)
         {
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 int min = matrix[i, 0];
                 int minIndex = 0;
-                for (int j = 1; j < cols; j++)
+                for (int j = 1; j < matrix.GetLength(1); j++)
                 {
                     if (matrix[i, j] < min)
                     {
@@ -84,29 +84,29 @@ namespace Lab2s2
 
             int rows = GetValidInt("Введіть кількість рядків:");
             int cols = GetValidInt("Введіть кількість стовпців:");
-
             int[,] matrix = new int[rows, cols];
 
             EnterArray(matrix, rows, cols);
 
-            SwapMaxWithFirst(matrix, rows, cols);
+            SwapMaxWithFirst(matrix);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню");
             Console.ReadKey();
         }
 
-        static void SwapMaxWithFirst(int[,] matrix, int rows, int cols)
+        static void SwapMaxWithFirst(int[,] matrix)
         {
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 int max = matrix[i, 0];
                 int maxIndex = 0;
-                for (int j = 1; j < cols; j++)
+                for (int j = 1; j < matrix.GetLength(1); j++)
                 {
-                    if (matrix[i, j] > max)
+                    if (matrix[i, j] > max) 
                     {
                         max = matrix[i, j];
                         maxIndex = j;
+                        break;
                     }
                 }
                 // Обмін місцями
@@ -115,7 +115,7 @@ namespace Lab2s2
                 matrix[i, maxIndex] = temp;
             }
             Console.WriteLine("Матриця після обміну:");
-            PrintMatrix(matrix, rows, cols);
+            PrintMatrix(matrix);
         }
 
         static void Block3()
@@ -127,20 +127,20 @@ namespace Lab2s2
             int[,] matrix = new int[rows, cols];
 
             EnterArray(matrix, rows, cols);
-            SortRowWithMaxProduct(matrix, rows, cols);
+            SortRowWithMaxProduct(matrix);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню");
             Console.ReadKey();
         }
-        static void SortRowWithMaxProduct(int[,] matrix, int rows, int cols)
+        static void SortRowWithMaxProduct(int[,] matrix)
         {
-            long[] rowProducts = new long[rows]; // Масив для зберігання добутків рядків
-            long maxProduct = long.MinValue;
+            long[] rowProducts = new long[matrix.GetLength(0)]; // Масив для зберігання добутків рядків
+            long maxProduct = long.MinValue; // Змінна для зберігання максимального добутку
 
-            for (int i = 0; i < rows; i++) // Обчислюємо добуток для кожного рядка
+            for (int i = 0; i < matrix.GetLength(0); i++) // Обчислюємо добуток для кожного рядка
             {
                 long product = 1;
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
                 {
                     product *= matrix[i, j];
                 }
@@ -152,18 +152,18 @@ namespace Lab2s2
                     maxProduct = product;
                 }
             }
-            for (int i = 0; i < rows; i++) // Сортуємо рядки з максимальним добутком
+            for (int i = 0; i < matrix.GetLength(0); i++) // Сортуємо рядки з максимальним добутком
             {
                 if (rowProducts[i] == maxProduct)
                 {
-                    int[] tempRow = new int[cols];
-                    for (int j = 0; j < cols; j++)
+                    int[] tempRow = new int[matrix.GetLength(1)];
+                    for (int j = 0; j < matrix.GetLength(1); j++)
                     {
                         tempRow[j] = matrix[i, j];
                     }
                     Array.Sort(tempRow);
                     Array.Reverse(tempRow);
-                    for (int j = 0; j < cols; j++)
+                    for (int j = 0; j < matrix.GetLength(1); j++)
                     {
                         matrix[i, j] = tempRow[j];
                     }
@@ -171,7 +171,7 @@ namespace Lab2s2
             }
 
             Console.WriteLine($"\nМатриця після сортування (Максимальний добуток: {maxProduct})");
-            PrintMatrix(matrix, rows, cols);
+            PrintMatrix(matrix);
         }
 
         static void Block4()
@@ -184,20 +184,20 @@ namespace Lab2s2
             int[,] matrix = new int[rows, cols];
 
             EnterArray(matrix, rows, cols);
-            SortColsByMaxElement(matrix, rows, cols);
+            SortColsByMaxElement(matrix);
 
             Console.WriteLine("Натисніть любу кнопку для виходу в меню");
             Console.ReadKey();
         }
-        static void SortColsByMaxElement(int[,] matrix, int rows, int cols)
+        static void SortColsByMaxElement(int[,] matrix)
         {
-            int[] maxElements = new int[cols];
+            int[] maxElements = new int[matrix.GetLength(1)];
 
             // Знаходимо максимальний елемент для кожного стовпця
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < matrix.GetLength(1); j++)
             {
                 int max = matrix[0, j];
-                for (int i = 1; i < rows; i++)
+                for (int i = 1; i < matrix.GetLength(0); i++)
                 {
                     if (matrix[i, j] > max)
                     {
@@ -207,9 +207,9 @@ namespace Lab2s2
                 maxElements[j] = max;
             }
 
-            for (int i = 0; i < cols - 1; i++)
+            for (int i = 0; i < matrix.GetLength(1) - 1; i++)
             {
-                for (int j = 0; j < cols - i - 1; j++)
+                for (int j = 0; j < matrix.GetLength(1) - i - 1; j++)
                 {
                     if (maxElements[j] < maxElements[j + 1])
                     {
@@ -217,12 +217,12 @@ namespace Lab2s2
                         maxElements[j] = maxElements[j + 1];
                         maxElements[j + 1] = tempMax;
 
-                        SwapColumns(matrix, rows, j, j + 1);
+                        SwapColumns(matrix, matrix.GetLength(0), j, j + 1);
                     }
                 }
             }
             Console.WriteLine("\nМатриця після сортування стовпців:");
-            PrintMatrix(matrix, rows, cols);
+            PrintMatrix(matrix);
         }
         static void SwapColumns(int[,] matrix, int rows, int col1, int col2)
         {
@@ -261,13 +261,13 @@ namespace Lab2s2
                 }
             }
             Console.WriteLine("Ваша матриця:");
-            PrintMatrix(matrix, rows, cols);
+            PrintMatrix(matrix);
         }
-        static void PrintMatrix(int[,] matrix, int rows, int cols)
+        static void PrintMatrix(int[,] matrix)
         {
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
                 {
                     Console.Write(matrix[i, j] + " ");
                 }
